@@ -35,8 +35,8 @@ export const user = {
       const newUser = new User({
         username,
         email,
-        password: await argon2.hash(password),
       });
+      await newUser.hashPassword(password);
       return res.status(200).json({
         success: true,
         message: "successfully registered",
