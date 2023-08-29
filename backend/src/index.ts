@@ -2,11 +2,17 @@ import "dotenv/config";
 import express from "express";
 import { isValidPort } from "./utils";
 import { startDB } from "./config/db";
+import configRoutes from "./routes/app.routes";
+import configMiddleware from "./middleware/global";
 
 const startServer = async (port: number) => {
   const app = express();
   try {
     await startDB();
+
+    configMiddleware(app);
+    configRoutes(app);
+
     app.listen(port, () => {
       console.log(`server started on port ${port}`);
     });

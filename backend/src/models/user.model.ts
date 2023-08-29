@@ -13,15 +13,22 @@ UserSchema.methods.hashPassword = async function (password: string) {
   this.password = await argon2.hash(password);
 };
 
-UserSchema.methods.jsonResponse = function () {
+UserSchema.methods.genAccessToken = function () {
   return sign(
     {
-      email: this.email,
-      username: this.username,
+      id: this._id,
     },
     "SECRET",
-    { expiresIn: "5h" }
+    { expiresIn: "1h" }
   );
+};
+
+UserSchema.methods.jsonResponse = function () {
+  return {
+    email: this.email,
+    username: this.username,
+    token: this.genAccessToken(),
+  };
 };
 
 export default model<IUser>("User", UserSchema);
