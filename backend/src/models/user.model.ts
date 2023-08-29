@@ -1,12 +1,7 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model } from "mongoose";
 import argon2 from "argon2";
-
-interface IUser extends Document {
-  email: string;
-  password: string;
-  avatar: string;
-  hashPassword: (password: string) => Promise<void>;
-}
+import { sign } from "jsonwebtoken";
+import { IUser } from "../types/interfaces";
 
 const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
@@ -16,6 +11,17 @@ const UserSchema = new Schema({
 
 UserSchema.methods.hashPassword = async function (password: string) {
   this.password = await argon2.hash(password);
+};
+
+UserSchema.methods.jsonResponse = function () {
+  return sign(
+    {
+      email: this.email,
+      username: this.username,
+    },
+    "SECRET",
+    { expiresIn: "5h" }
+  );
 };
 
 export default model<IUser>("User", UserSchema);
