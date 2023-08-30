@@ -13,7 +13,7 @@ import {
 import React from "react";
 import axios from "axios";
 
-const emojis = [
+export const emojis = [
   { mood: "Happy", emoji: "😄" },
   { mood: "Joyful", emoji: "😃" },
   { mood: "Excited", emoji: "🎉" },
